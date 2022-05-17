@@ -11,24 +11,34 @@
 #  updated_at :datetime         not null
 #
 class Actor < ApplicationRecord
-  def characters
-    key = self.id
 
-    the_many = Character.where({ :actor_id => key })
+  has_many(:characters, {:foreign_key => "actor_id"})
 
-    return the_many
-  end
+  # has_many :movies, :through => :characters
+  has_many(:filmography, { :through => :characters, :source => :movie })
 
-  def filmography
-    the_many = Array.new
+  has_many(:directors, { :through => :filmography, :source => :director })
 
-    self.characters.each do |joining_record|
-      destination_record = joining_record.movie
+  # 'has_many :filmography, :through => :characters, :source => <name>'. Is it one of movie or actor?
 
-      the_many.push(destination_record)
-    end
+  # def characters
+  #   key = self.id
 
-    return the_many
-  end
+  #   the_many =  Character.where({ :actor_id => key })
+
+  #   return the_many
+  # end
+
+  # def filmography
+  #   the_many = Array.new
+
+  #   self.characters.each do |joining_record|
+  #     destination_record = joining_record.movie
+
+  #     the_many.push(destination_record)
+  #   end
+
+  #   return the_many
+  # end
 
 end
